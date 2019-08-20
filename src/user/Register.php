@@ -29,7 +29,7 @@ class Register extends Database
         // then validate
         $validation->validate();
         if ($validation->fails()) {
-            Helper::response('validationError', $validation->errors()->toArray());
+            Helper::response('validationError',  ['hata'=>$validation->errors()->toArray()]);
         } else {
             $this->createUser($data);
         }
