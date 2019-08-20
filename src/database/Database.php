@@ -6,7 +6,7 @@
  * VERİTABANI BAĞLANTISI BURADA ÇAĞRI ÜZERİNE OLUŞTURULUR VE KAPATILIR
  * */
 
-namespace modules\src\database;
+namespace API\src\database;
 
 use PDO;
 use PDOException;
@@ -56,12 +56,13 @@ class Database
                     CHARACTER SET utf8 COLLATE utf8_general_ci";
         return $this->conn->exec($sql) !== false ? true : false;
     }
+
+
     /*
      * VERİTABANI BAĞLANTISINI KAPATIR
      * SONUÇ DÖNMEZ
      * */
-    public
-    function Close()
+    public function Close()
     {
         $this->conn = null;
     }

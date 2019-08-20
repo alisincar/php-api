@@ -6,7 +6,7 @@
  * ÖR: \Helpers\Helper::dd($degisken);
  * */
 
-namespace modules\src\Helpers;
+namespace API\src\Helpers;
 
 
 class Helper
@@ -32,10 +32,18 @@ class Helper
         die;
     }
 
-    public static function arrayMap(array $array,$mode = null, $column=null)
+    /**
+     * Dizilerin içerisindeki belli bir sutunu dizi olarak veya string olarak almaya yarar
+     * @param array $array Çevirilecek dizi
+     * @param null $mode WHEREIN olursa string verir değilse array
+     * @param null $column hangi kolonun döneceği
+     * @return array|string
+     */
+
+    public static function arrayMap(array $array, $mode = null, $column = null)
     {
         $array = array_map(function ($x) use ($column) {
-            return ($column!=null)?$x[$column]:$x;
+            return ($column != null) ? $x[$column] : $x;
         }, $array);
         if ($mode == 'whereIn') {
             $array = join("','", $array);
@@ -43,6 +51,10 @@ class Helper
         return $array;
     }
 
+    /*
+     * Sipariş tipinin karşılığını yazar
+     * true olursa türkçe yazar false olursa ingilizce karakterlerle yazar
+     * */
     public static function siparisTip($tip, $type = false)
     {
         switch ($tip) {
@@ -72,5 +84,56 @@ class Helper
                 break;
         }
         return ($type) ? $siparis_tipi_tr : $siparis_tipi;
+    }
+    function get_http_response_code($domain1) {
+        $headers = get_headers($domain1);
+        return substr($headers[0], 9, 3);
+    }
+    public static function response($status='success',$code=200,$data=null)
+    {
+
+        switch ($status){
+            case 'success':
+                $code='200';
+                break;
+            case 'error':
+                $code='401';
+                break;
+            case 'emptyParams':
+                $code='401';
+                break;
+            case 'updateApplication':
+                $code='410';
+                break;
+            case 'loginError':
+                $code='401';
+                break;
+            case 'registerError':
+                $code='401';
+                break;
+            case 'updateError':
+                $code='304';
+                break;
+            case 'insertError':
+                $code='304';
+                break;
+            case 'tokenError':
+                $code='401';
+                break;
+            case 'validationError':
+                $code='406';
+                break;
+            case 'wrongMethod':
+                $code='404';
+                break;
+        }
+
+//        header('HTTP/1.0 $code $status');
+        http_response_code($code);
+        $array=['status'=>$status];
+        if($data){
+            $array['data']=$data;
+        }
+        return json_encode($array);
     }
 }

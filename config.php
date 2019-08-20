@@ -20,3 +20,5 @@ error_reporting(E_ALL); //Bütün hatalar
 
 //Zamanaşımı süresi
 ini_set('max_execution_time', 0); //0=NOLIMIT
+
+

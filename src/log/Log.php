@@ -1,7 +1,7 @@
 <?php
 
 
-namespace modules\src\log;
+namespace API\src\log;
 
 
 class Log
