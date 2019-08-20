@@ -10,7 +10,7 @@ use Rakit\Validation\Validator;
 
 class Login extends Database
 {
-    private $conn = null;
+    public $conn = null;
 
     public function __construct($data)
     {
@@ -19,13 +19,13 @@ class Login extends Database
         // make it
         $validation = $validator->make($data, [
             'email' => 'required|email',
-            'password' => 'required|min:6'
+            'sifre' => 'required|min:6'
         ]);
 
         // then validate
         $validation->validate();
         if ($validation->fails()) {
-            Helper::response('validationError', $validation->errors());
+            Helper::response('validationError', $validation->errors()->toArray());
         } else {
             $this->loginUser($data);
         }
@@ -33,13 +33,14 @@ class Login extends Database
 
     private function loginUser($data)
     {
-        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE push_token :token");
-        $user = $user->execute(array('token' => $data['token']))->fetch();
+        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE u.email=:email and u.sifre=:sifre");
+        $user->execute(array('email' => $data['email'],'sifre'=>md5($data['sifre'])));
         $user_count = $user->rowCount();
         if ($user_count > 0) {
-            Helper::response('success', $user);
+            $user=$user->fetch();
+            Helper::response('success',$user);
         } else {
-            Helper::response('validationError', 'E-mail kullanılıyor');
+            Helper::response('loginError', 'Giriş yapılamadı');
         }
     }
 

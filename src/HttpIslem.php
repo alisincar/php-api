@@ -9,6 +9,8 @@ namespace API\src;
 
 use API\src\database\Database;
 use API\src\Helpers\Helper;
+use API\src\user\Login;
+use API\src\user\Register;
 
 class HttpIslem extends Database
 {
@@ -27,31 +29,28 @@ class HttpIslem extends Database
 
         if (in_array($_SERVER['REMOTE_ADDR'], $ip_listesi_dizi)) {
             $islem = $_GET['islem'];
+            $this->$islem($_GET);
             try {
-                $this->$islem($_GET);
             } catch (\Exception $e) {
-                 Helper::response('wrongMethod');
-            }catch (\Throwable $t){
-                 Helper::response('wrongMethod');
+                #TODO: hataları mail ile gönder
+                Helper::response('wrongMethod');
+            } catch (\Throwable $t) {
+                Helper::response('wrongMethod');
             }
         } else {
-             Helper::response('emptyParams');
+            Helper::response('emptyParams');
         }
     }
 
     public function login($data)
     {
-        if (!empty($data['email']) && !empty($data['password'])) {
-            $cv = new Login;
-            $cv->get($data['email'], $data['email']);
-        } else {
-             Helper::response('emptyParams');
-        }
+        new Login($data);
+
     }
 
     public function register($data)
     {
-       new Register($data);
+        new Register($data);
     }
 
 
