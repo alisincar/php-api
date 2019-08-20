@@ -20,7 +20,7 @@ class Database
      * VERİTABANI BAĞLANTI BAŞLATMA FONKSİYONU
      * index.php'den gelen bilgilere göre bağlantı yapar sorun varsa hata çıktısı verir
      * */
-    public function Connect()
+    public function connect()
     {
         try {
             $dsn = "mysql:dbname=" . database . "; host=" . host.';charset=utf8';
@@ -40,7 +40,7 @@ class Database
     /*
      * CREATE FONKSİYONU o_para_bonus_tercih TABLOSU YOKSA OLUŞTURUR
      * */
-    public function CreateOParaTransferTable()
+    public function createOParaTransferTable()
     {
         $sql = "CREATE TABLE IF NOT EXISTS `o_para_bonus_tercih` (
                     `id` INT AUTO_INCREMENT NOT NULL,
@@ -60,10 +60,10 @@ class Database
     /*
      * CREATE FONKSİYONU tokens TABLOSU YOKSA OLUŞTURUR
      * */
-    public function CreateTokensTable()
+    public function createTokensTable()
     {
         $sql = "CREATE TABLE IF NOT EXISTS `tokens` (
-                  `id` int(11) AUTO_INCREMENT NOT NULL,
+                  `id` int AUTO_INCREMENT NOT NULL,
                   `user_id` int(11) DEFAULT NULL,
                   `facebook_login_id` int(11) DEFAULT NULL,
                   `google_login_id` int(11) DEFAULT NULL,
@@ -84,8 +84,8 @@ class Database
                   `last_login` datetime DEFAULT NULL,
                   `created_at` datetime DEFAULT NULL,
                   `updated_at` datetime DEFAULT NULL,
-                   PRIMARY KEY (`id`)) 
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+                   PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         return $this->conn->exec($sql) !== false ? true : false;
     }
 
@@ -94,7 +94,7 @@ class Database
      * VERİTABANI BAĞLANTISINI KAPATIR
      * SONUÇ DÖNMEZ
      * */
-    public function Close()
+    public function close()
     {
         $this->conn = null;
     }

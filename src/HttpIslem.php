@@ -15,7 +15,9 @@ class HttpIslem extends Database
 
     public function __construct()
     {
-        $conn = $this->Connect();
+
+        $conn = $this->connect();
+        $this->createTokensTable();
         $sql = "SELECT * FROM network_ip_listesi ORDER BY id ASC";
         $ip_listesi = $conn->query($sql)->fetchAll();
         $ip_listesi_dizi = array();
@@ -28,53 +30,28 @@ class HttpIslem extends Database
             try {
                 $this->$islem($_GET);
             } catch (\Exception $e) {
-                echo Helper::response('wrongMethod');
+                 Helper::response('wrongMethod');
             }catch (\Throwable $t){
-                echo Helper::response('wrongMethod');
+                 Helper::response('wrongMethod');
             }
         } else {
-            echo Helper::response('emptyParams');
+             Helper::response('emptyParams');
         }
     }
 
-    public function setCv($data)
+    public function login($data)
     {
-        if (!empty($data['id']) && !empty($data['cv']) && !empty($data['vip_cv']) && !empty($data['carihareketref'])) {
-            $cv = new Cv;
-            $cv->set($data['id'], $data['id'], $data['cv'], $data['vip_cv'], $data['carihareketref']);
+        if (!empty($data['email']) && !empty($data['password'])) {
+            $cv = new Login;
+            $cv->get($data['email'], $data['email']);
         } else {
-            echo Helper::response('emptyParams');
+             Helper::response('emptyParams');
         }
     }
 
-    public function setPv($data)
+    public function register($data)
     {
-        if (!empty($data['id']) && !empty($data['toplampuan']) && !empty($data['vip_toplampuan']) && !empty($data['carihareketref'])) {
-            $pv = new Pv;
-            $pv->set($data['id'], $data['id'], $data['toplampuan'], $data['vip_toplampuan'], $data['carihareketref']);
-        } else {
-            echo Helper::response('emptyParams');
-        }
-    }
-
-    public function rollbackCv($data)
-    {
-        if (!empty($data['log_id'])) {
-            $cv = new Cv;
-            $cv->rollBack($data['log_id']);
-        } else {
-            echo Helper::response('emptyParams');
-        }
-    }
-
-    public function rollbackPv($data)
-    {
-        if (!empty($data['log_id'])) {
-            $pv = new Pv;
-            $pv->rollBack($data['log_id']);
-        } else {
-            echo Helper::response('emptyParams');
-        }
+       new Register($data);
     }
 
 

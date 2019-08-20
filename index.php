@@ -22,7 +22,7 @@ function autoload($className)
 
 //Sınıfımızı arayıp bulacak olan metotu belirliyoruz.
 spl_autoload_register('autoload');
-
+require 'vendor/autoload.php';
 
 /**
  * HTTP isteklerini yanıtlayacak class'ımız

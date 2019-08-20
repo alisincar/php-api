@@ -89,7 +89,7 @@ class Helper
         $headers = get_headers($domain1);
         return substr($headers[0], 9, 3);
     }
-    public static function response($status='success',$code=200,$data=null)
+    public static function response($status='success',$data=null)
     {
 
         switch ($status){
@@ -97,7 +97,7 @@ class Helper
                 $code='200';
                 break;
             case 'error':
-                $code='401';
+                $code='500';
                 break;
             case 'emptyParams':
                 $code='401';
@@ -134,6 +134,6 @@ class Helper
         if($data){
             $array['data']=$data;
         }
-        return json_encode($array);
+        echo json_encode($array);
     }
 }
