@@ -12,8 +12,6 @@ use API\src\Helpers\Helper;
 
 class HttpIslem extends Database
 {
-    public $error_msg = ['status' => 'error', 'result' => 'File or directory not found.'];
-    public $return_msg = ['status' => 'error', 'data' => array('users' => array(), 'sa' => array(), 'alert' => array('title' => 'a', 'message' => ''))];
 
     public function __construct()
     {
