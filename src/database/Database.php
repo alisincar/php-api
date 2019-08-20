@@ -38,7 +38,7 @@ class Database
 
 
     /*
-     * CREATE FONKSİYONU LOG_PV TABLOSU YOKSA OLUŞTURUR
+     * CREATE FONKSİYONU o_para_bonus_tercih TABLOSU YOKSA OLUŞTURUR
      * */
     public function CreateOParaTransferTable()
     {
@@ -54,6 +54,38 @@ class Database
                     `updated_at` timestamp(0) NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)) 
                     CHARACTER SET utf8 COLLATE utf8_general_ci";
+        return $this->conn->exec($sql) !== false ? true : false;
+    }
+
+    /*
+     * CREATE FONKSİYONU tokens TABLOSU YOKSA OLUŞTURUR
+     * */
+    public function CreateTokensTable()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS `tokens` (
+                  `id` int(11) AUTO_INCREMENT NOT NULL,
+                  `user_id` int(11) DEFAULT NULL,
+                  `facebook_login_id` int(11) DEFAULT NULL,
+                  `google_login_id` int(11) DEFAULT NULL,
+                  `access_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `device_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `push_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `os_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `os_version` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `device_brand` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `device_model` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `app_version` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `locale` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `allow_push` tinyint(1) DEFAULT NULL,
+                  `manuel_logged` tinyint(1) DEFAULT NULL,
+                  `facebook_logged` tinyint(1) DEFAULT NULL,
+                  `google_logged` tinyint(1) DEFAULT NULL,
+                  `ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `last_login` datetime DEFAULT NULL,
+                  `created_at` datetime DEFAULT NULL,
+                  `updated_at` datetime DEFAULT NULL,
+                   PRIMARY KEY (`id`)) 
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         return $this->conn->exec($sql) !== false ? true : false;
     }
 
