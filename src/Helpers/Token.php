@@ -34,21 +34,21 @@ class Token
         if ($user) {
             $sql = $db->exec("UPDATE tokens SET push_token='$token' WHERE user_id='$user_id'");
         } else {
-            $sql = $db->exec("INSERT INTO tokens (push_token,user_id,manuel_logged,last_login,created_at) VALUES ('$token',$user_id),1,now(),now()");
+            $sql = $db->exec("INSERT INTO tokens (push_token,user_id,manuel_logged,last_login,created_at) VALUES ('$token',$user_id,1,now(),now())");
         }
         return ($sql) ? $token : false;
     }
-    
-    private static function updateToken($token,$login_type=null)
+
+    public static function updateToken($token,$login_type=null)
     {
-        $token_sql = (new Database())->connect()->prepare("UPDATE tokens SET manuel_logged=1,last_login=now() WHERE push_token :token");
-        $token_sql->execute(array('token' => $token));
+        $token_sql = (new Database())->connect()->prepare("UPDATE tokens SET manuel_logged=1,last_login=now() WHERE push_token =:token");
+        $token_sql->execute(array('token' => "$token"));
 
     }
 
-    private static function removeToken($token)
+    public static function removeToken($token)
     {
-        $token_sql = (new Database())->connect()->prepare("DELETE FROM tokens WHERE t.push_token :token");
+        $token_sql = (new Database())->connect()->prepare("DELETE FROM tokens WHERE t.push_token =:token");
         $token_sql->execute(array('token' => $token));
     }
 }
