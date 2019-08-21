@@ -6,6 +6,7 @@ namespace API\src;
 use API\src\Helpers\Helper;
 use API\src\user\Login;
 use API\src\user\Register;
+use API\src\user\User;
 
 $filename = __DIR__ . preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
 if (php_sapi_name() === 'cli-server' && is_file($filename)) {
@@ -33,7 +34,7 @@ class Router
             Helper::response('wrongMethod');
         });
 
-        $router->post('/login/{tip}', function ($tip)  {
+        $router->post('/login/{tip}', function ($tip) {
             new Login($tip, $_POST);
         });
 
@@ -41,10 +42,15 @@ class Router
             new Register($tip, $_POST);
         });
 
-        $router->mount('/login', function () use ($router) {
+        $router->mount('/user', function () use ($router) {
 
-            $router->post('/', function () {
-                echo 'add movie';
+            $router->post('/me', function () {
+                $user = new User();
+                if (isset($_POST['token']) && !empty($_POST['token'])) {
+                    $user->getUser($_POST['token']);
+                } else {
+                    Helper::response('emptyParams');
+                }
             });
         });
         $router->run();

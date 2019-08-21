@@ -129,6 +129,8 @@ class Helper
         }
 
 //        header('HTTP/1.0 $code $status');
+
+        header("Content-Type: application/json; charset=utf-8");
         http_response_code($code);
         $array=['status'=>$status];
         if($data){

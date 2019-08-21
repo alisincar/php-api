@@ -19,7 +19,6 @@ class HttpIslem extends Database
     {
 
         $conn = $this->connect();
-        $this->createTokensTable();
         $sql = "SELECT * FROM network_ip_listesi ORDER BY id ASC";
         $ip_listesi = $conn->query($sql)->fetchAll();
         $ip_listesi_dizi = array();

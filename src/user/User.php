@@ -18,16 +18,15 @@ class User extends Database
     public $conn = null;
     public $user = null;
 
-    public function __construct($data)
+    public function __construct()
     {
         $this->conn = $this->connect();
-        $this->getUser($data);
     }
 
     /*
      * Gelen tokeni sorgular ve token doğruysa Üyenin bilgilerini döner
      * */
-    private function getUser($data)
+    public function getUser($data)
     {
         $checkToken=Token::checkToken($data);
         $checkStatus=$checkToken['status'];

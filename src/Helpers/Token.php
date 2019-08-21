@@ -19,8 +19,8 @@ class Token
      * Tokenin varlığını sorgular ve geriye kullanıcı ve token tablosunu birleşik dizide döner
      * */
     public static function checkToken($token){
-        $user = (new Database())->connect()->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE t.push_token :token");
-        $user->execute(array('token' => $token));
+        $user = (new Database())->connect()->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE t.push_token =:token");
+        $user->execute(array('token' => "$token"));
         $user_count = $user->rowCount();
         if ($user_count > 0) {
             self::$user=$user->fetch();
@@ -37,7 +37,9 @@ class Token
      * */
     public static function getToken($user_id)
     {
-        $db=(new Database())->connect();
+        $dbc=(new Database());
+        $db=$dbc->connect();
+        $dbc->createTokensTable();
         do {
             $token = base64_encode(base64_encode(md5(rand(10000000, 99999999999))));
             $token_sql = $db->query("SELECT * FROM tokens WHERE push_token='$token'")->fetch();
