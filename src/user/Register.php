@@ -1,8 +1,12 @@
 <?php
 
 
-namespace API\src\user;
+/**
+ * KAYIT CLASS'I
+ * Üyenin Bu kısımda veritabanına kaydedilir
+ * */
 
+namespace API\src\user;
 
 use API\src\database\Database;
 use API\src\Helpers\Helper;
@@ -15,10 +19,13 @@ class Register extends Database
 
     public function __construct($data)
     {
+
+        /*
+         * Gelen verilerin doğruluğunu kontrol eder
+         * */
         $this->conn = $this->connect();
 
         $validator = new Validator;
-        // make it
         $validation = $validator->make($_GET, [
             'ad' => 'required',
             'soyad' => 'required',
@@ -29,13 +36,19 @@ class Register extends Database
 
         // then validate
         $validation->validate();
+
+        //Veriler istediğimiz gibi değilse hata mesajını veriyoruz
         if ($validation->fails()) {
             Helper::response('validationError',  ['hata'=>$validation->errors()->toArray()]);
         } else {
             $this->createUser($data);
         }
     }
-
+    /*
+     * Kullanıcı oluşturma fonksiyonu
+     * Email kullanılmıyorsa üyeyi ve tokeni oluşturur geriye üye ve token tablosunu döner
+     * herhangi bir hata durumunda hata mesajı dönecek
+     * */
     private function createUser($data)
     {
         $user_email = $this->conn->prepare("SELECT * FROM uyeler WHERE email=:email");
@@ -44,7 +57,6 @@ class Register extends Database
         if ($user_email_count > 0) {
             Helper::response('validationError', 'E-mail kullanılıyor');
         } else {
-
             $create_user = $this->conn->prepare('INSERT INTO uyeler (ad, soyad, email,sifre)
                                                 VALUES (:ad, :soyad, :email,:sifre)');
             $create_user->execute([
@@ -55,6 +67,10 @@ class Register extends Database
             ]);
             $last_id = $this->conn->lastInsertId();
             if ($create_user) {
+
+                /*
+                 * Token oluşturuluyor hata olursa hata mesajı verilecek
+                 * */
                 if (Token::createToken($last_id) !== false) {
                     $user = $this->conn->query("SELECT * FROM uyeler as u join tokens as t ON u.ref=t.user_id WHERE u.ref='$last_id'")->fetch();
                     Helper::response('success', $user);

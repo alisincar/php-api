@@ -1,8 +1,11 @@
 <?php
 
+/**
+ * Giriş CLASS'I
+ * Üye Bu kısımda hesabına erişir
+ * */
 
 namespace API\src\user;
-
 
 use API\src\database\Database;
 use API\src\Helpers\Helper;
@@ -22,15 +25,25 @@ class Login extends Database
             'email' => 'required|email',
             'sifre' => 'required|min:6'
         ];
+
+        /*
+         * login tipi email doğrulama ise şifre zorunluluğunu siliyoruz
+         * */
         if ($data['tip'] == 'loginCheckEmail') {
             unset($validation_array['sifre']);
         }
         $validation = $validator->make($data, $validation_array);
         // then validate
         $validation->validate();
+        /*
+         * Validasyonda bir sorun yoksa giriş yapılıyor sorun varsa hata mesajı yazılacak
+         * */
         if ($validation->fails()) {
             Helper::response('validationError', ['hata' => $validation->errors()->toArray()]);
         } else {
+            /*
+             * Giriş tipine göre login isteği ilgili fonksiyonda işleniyor
+             * */
             $function = $data['tip'];
             if ($function == 'loginCheckEmail' or $function == 'loginUser') {
                 $this->$function($data);
@@ -40,6 +53,9 @@ class Login extends Database
         }
     }
 
+    /*
+     * Gönderilen email uyeler tablosunda var ise olumlu sonuç dönülüyor
+     * */
     private function loginCheckEmail($data)
     {
         $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE u.email=:email");
@@ -54,6 +70,10 @@ class Login extends Database
         }
     }
 
+
+    /*
+     * Gönderilen veriler doğruysa giriş sağlanıyor ve token veriliyor
+     * */
     private function loginUser($data)
     {
         $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE u.email=:email and u.sifre=:sifre");

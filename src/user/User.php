@@ -1,6 +1,11 @@
 <?php
 
 
+/**
+ * USER CLASS'I
+ * Üyenin bütün bilgileri buradan dağıtılır
+ * */
+
 namespace API\src\user;
 
 
@@ -19,6 +24,9 @@ class User extends Database
         $this->getUser($data);
     }
 
+    /*
+     * Gelen tokeni sorgular ve token doğruysa Üyenin bilgilerini döner
+     * */
     private function getUser($data)
     {
         $checkToken=Token::checkToken($data);

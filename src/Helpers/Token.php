@@ -1,14 +1,23 @@
 <?php
 
+/**
+ * TOKEN YONETIM CLASS'I
+ * STATİC FONKSİYON BARINDIRIR DİREK HELPER NAMESPACE'I YAZILARAK NEW DİYE OLUŞTURMADAN ULAŞILABİLİR
+ * ÖR: \Helpers\Token::checkToken($degisken);
+ * */
 
 namespace API\src\Helpers;
-
 
 use API\src\database\Database;
 
 class Token
 {
     public static $user=null;
+
+
+    /*
+     * Tokenin varlığını sorgular ve geriye kullanıcı ve token tablosunu birleşik dizide döner
+     * */
     public static function checkToken($token){
         $user = (new Database())->connect()->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE t.push_token :token");
         $user->execute(array('token' => $token));
@@ -23,6 +32,9 @@ class Token
     }
 
 
+    /*
+     * Token oluşturur ve tokens tablosunda parametre aldığı user_id ile kaydeder
+     * */
     public static function createToken($user_id)
     {
         $db=(new Database())->connect();
@@ -39,13 +51,21 @@ class Token
         return ($sql) ? $token : false;
     }
 
+    /*
+     * Token'in son kullanım tarihini ve kullanım tipini günceller
+     * */
     public static function updateToken($token,$login_type=null)
     {
+        #TODO kullanım tipini ayarla
+
         $token_sql = (new Database())->connect()->prepare("UPDATE tokens SET manuel_logged=1,last_login=now() WHERE push_token =:token");
         $token_sql->execute(array('token' => "$token"));
 
     }
 
+    /*
+     * Tokeni siler
+     * */
     public static function removeToken($token)
     {
         $token_sql = (new Database())->connect()->prepare("DELETE FROM tokens WHERE t.push_token =:token");
