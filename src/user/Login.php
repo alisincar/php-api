@@ -58,7 +58,7 @@ class Login extends Database
      * */
     private function loginCheckEmail($data)
     {
-        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE u.email=:email");
+        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE (u.email=:email or u.networkno=:email)");
         $user->execute(array('email' => $data['email']));
         $user_count = $user->rowCount();
         if ($user_count > 0) {
@@ -66,7 +66,7 @@ class Login extends Database
             Token::updateToken($user['push_token']);
             Helper::response('success');
         } else {
-            Helper::response('loginError', 'E-mail bulunamadı');
+            Helper::response('loginError', 'E-mail ve Oga Kodu bulunamadı');
         }
     }
 
@@ -76,7 +76,7 @@ class Login extends Database
      * */
     private function loginUser($data)
     {
-        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE u.email=:email and u.sifre=:sifre");
+        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE (u.email=:email or u.networkno=:email) and u.sifre=:sifre");
         $user->execute(array('email' => $data['email'], 'sifre' => md5($data['sifre'])));
         $user_count = $user->rowCount();
         if ($user_count > 0) {
