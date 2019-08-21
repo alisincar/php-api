@@ -16,7 +16,7 @@ class Login extends Database
 {
     public $conn = null;
 
-    public function __construct($data)
+    public function __construct($tip, $data)
     {
         $this->conn = $this->connect();
         $validator = new Validator;
@@ -29,7 +29,7 @@ class Login extends Database
         /*
          * login tipi email doğrulama ise şifre zorunluluğunu siliyoruz
          * */
-        if ($data['tip'] == 'loginCheckEmail') {
+        if ($tip == 'checkEmail') {
             unset($validation_array['sifre']);
         }
         $validation = $validator->make($data, $validation_array);
@@ -44,8 +44,8 @@ class Login extends Database
             /*
              * Giriş tipine göre login isteği ilgili fonksiyonda işleniyor
              * */
-            $function = $data['tip'];
-            if ($function == 'loginCheckEmail' or $function == 'loginUser') {
+            $function = $tip;
+            if ($function == 'checkEmail' or $function == 'loginUser') {
                 $this->$function($data);
             } else {
                 Helper::response('wrongMethod');
@@ -56,14 +56,13 @@ class Login extends Database
     /*
      * Gönderilen email uyeler tablosunda var ise olumlu sonuç dönülüyor
      * */
-    private function loginCheckEmail($data)
+    private function checkEmail($data)
     {
-        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE (u.email=:email or u.networkno=:email)");
+        $user = $this->conn->prepare("SELECT * FROM uyeler WHERE (email=:email or networkno=:email)");
         $user->execute(array('email' => $data['email']));
         $user_count = $user->rowCount();
         if ($user_count > 0) {
             $user = $user->fetch();
-            Token::updateToken($user['push_token']);
             Helper::response('success');
         } else {
             Helper::response('loginError', 'E-mail ve Oga Kodu bulunamadı');
@@ -76,15 +75,18 @@ class Login extends Database
      * */
     private function loginUser($data)
     {
-        $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE (u.email=:email or u.networkno=:email) and u.sifre=:sifre");
+        $user = $this->conn->prepare("SELECT * FROM  uyeler WHERE (email=:email and sifre=:sifre) or (networkno=:email and sifre=:sifre)");
         $user->execute(array('email' => $data['email'], 'sifre' => md5($data['sifre'])));
         $user_count = $user->rowCount();
         if ($user_count > 0) {
             $user = $user->fetch();
-            Token::updateToken($user['push_token']);
+            $token=Token::getToken($user['ref']);
+            if ($token !== false) {
+               $user['token']=$token;
+            }
             Helper::response('success', $user);
         } else {
-            Helper::response('loginError', 'Giriş yapılamadı');
+            Helper::response('loginError', 'Giriş yapılamadı ');
         }
     }
 

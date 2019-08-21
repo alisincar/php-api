@@ -30,3 +30,4 @@ require 'vendor/autoload.php';
 if ((isset($_GET['islem']) && !empty($_GET['islem'])) || (isset($_POST['islem']) && !empty($_POST['islem']))) {
     new \API\src\HttpIslem();
 }
+new \API\src\Router();

@@ -24,7 +24,7 @@ class Token
         $user_count = $user->rowCount();
         if ($user_count > 0) {
             self::$user=$user->fetch();
-            self::updateToken();
+            self::updateToken($token);
             return ['status'=>'success','user'=>self::$user];
         } else {
             return ['status'=>'tokenError'];
@@ -35,7 +35,7 @@ class Token
     /*
      * Token oluşturur ve tokens tablosunda parametre aldığı user_id ile kaydeder
      * */
-    public static function createToken($user_id)
+    public static function getToken($user_id)
     {
         $db=(new Database())->connect();
         do {
@@ -44,7 +44,7 @@ class Token
         } while ($token_sql);
         $user = $db->query("SELECT * FROM tokens WHERE user_id='$user_id'")->fetch();
         if ($user) {
-            $sql = $db->exec("UPDATE tokens SET push_token='$token' WHERE user_id='$user_id'");
+            $sql = $db->exec("UPDATE tokens SET push_token='$token',last_login=now(),updated_at=now() WHERE user_id='$user_id'");
         } else {
             $sql = $db->exec("INSERT INTO tokens (push_token,user_id,manuel_logged,last_login,created_at) VALUES ('$token',$user_id,1,now(),now())");
         }
