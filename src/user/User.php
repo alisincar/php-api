@@ -6,6 +6,7 @@ namespace API\src\user;
 
 use API\src\database\Database;
 use API\src\Helpers\Helper;
+use API\src\Helpers\Token;
 
 class User extends Database
 {
@@ -15,18 +16,17 @@ class User extends Database
     public function __construct($data)
     {
         $this->conn = $this->connect();
-        $this->checkToken($data);
+        $this->getUser($data);
     }
 
-    public function checkToken($token){
-            $user = $this->conn->prepare("SELECT * FROM tokens as t join uyeler as u on u.ref=t.user_id WHERE push_token :token");
-            $user->execute(array('token' => $token));
-            $user_count = $user->rowCount();
-            if ($user_count > 0) {
-                $this->user=$user->fetch();
-                Helper::response('success', $user);
-            } else {
-                Helper::response('tokenError', 'Hatalı Token');
-            }
+    private function getUser($data)
+    {
+        $checkToken=Token::checkToken($data);
+        $checkStatus=$checkToken['status'];
+        if($checkStatus=='success'){
+            Helper::response($checkStatus,$checkToken['user']);
+        }else{
+            Helper::response($checkStatus);
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace API\src\user;
 
 use API\src\database\Database;
 use API\src\Helpers\Helper;
+use API\src\Helpers\Token;
 use Rakit\Validation\Validator;
 
 class Register extends Database
@@ -54,7 +55,7 @@ class Register extends Database
             ]);
             $last_id = $this->conn->lastInsertId();
             if ($create_user) {
-                if ($this->getToken($last_id) !== false) {
+                if (Token::createToken($last_id) !== false) {
                     $user = $this->conn->query("SELECT * FROM uyeler as u join tokens as t ON u.ref=t.user_id WHERE u.ref='$last_id'")->fetch();
                     Helper::response('success', $user);
                 } else {
@@ -66,18 +67,4 @@ class Register extends Database
         }
     }
 
-    public function getToken($user_id)
-    {
-        do {
-            $token = base64_encode(base64_encode(md5(rand(10000000, 99999999999))));
-            $token_table = $this->conn->query("SELECT * FROM tokens WHERE push_token='$token'")->fetch();
-        } while ($token_table);
-        $user = $this->conn->query("SELECT * FROM tokens WHERE user_id='$user_id'")->fetch();
-        if ($user) {
-            $sql = $this->conn->exec("UPDATE tokens SET push_token='$token' WHERE user_id='$user_id'");
-        } else {
-            $sql = $this->conn->exec("INSERT INTO tokens (push_token,user_id) VALUES ('$token',$user_id)");
-        }
-        return ($sql) ? $token : false;
-    }
 }
