@@ -5,12 +5,12 @@
  * DÜZENİ KORUMAK İÇİN KESİNLİKLE BURAYA İŞLEM YAZILMAZ SADECE YÖNLENDİRME YAPILIR
  */
 
-namespace API\src;
+namespace API\v1\src;
 
-use API\src\database\Database;
-use API\src\Helpers\Helper;
-use API\src\user\Login;
-use API\src\user\Register;
+use API\v1\src\database\Database;
+use API\v1\src\Helpers\Helper;
+use API\v1\src\user\Login;
+use API\v1\src\user\Register;
 
 class HttpIslem extends Database
 {

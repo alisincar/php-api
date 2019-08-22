@@ -6,7 +6,7 @@
  * VERİTABANI BAĞLANTISI BURADA ÇAĞRI ÜZERİNE OLUŞTURULUR VE KAPATILIR
  * */
 
-namespace API\src\database;
+namespace API\v1\src\database;
 
 use PDO;
 use PDOException;

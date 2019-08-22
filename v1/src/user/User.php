@@ -6,12 +6,12 @@
  * Üyenin bütün bilgileri buradan dağıtılır
  * */
 
-namespace API\src\user;
+namespace API\v1\src\user;
 
 
-use API\src\database\Database;
-use API\src\Helpers\Helper;
-use API\src\Helpers\Token;
+use API\v1\src\database\Database;
+use API\v1\src\Helpers\Helper;
+use API\v1\src\Helpers\Token;
 
 class User extends Database
 {

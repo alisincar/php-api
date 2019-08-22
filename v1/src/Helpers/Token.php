@@ -6,9 +6,9 @@
  * ÖR: \Helpers\Token::checkToken($degisken);
  * */
 
-namespace API\src\Helpers;
+namespace API\v1\src\Helpers;
 
-use API\src\database\Database;
+use API\v1\src\database\Database;
 
 class Token
 {

@@ -4,7 +4,7 @@
  * Modülleri dışardan çağırmak için referans Class
  */
 
-namespace API\src;
+namespace API\v1\src;
 
 
 class Islem

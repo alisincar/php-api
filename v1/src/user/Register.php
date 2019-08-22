@@ -6,11 +6,11 @@
  * Üyenin Bu kısımda veritabanına kaydedilir
  * */
 
-namespace API\src\user;
+namespace API\v1\src\user;
 
-use API\src\database\Database;
-use API\src\Helpers\Helper;
-use API\src\Helpers\Token;
+use API\v1\src\database\Database;
+use API\v1\src\Helpers\Helper;
+use API\v1\src\Helpers\Token;
 use Rakit\Validation\Validator;
 
 class Register extends Database

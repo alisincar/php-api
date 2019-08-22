@@ -1,12 +1,12 @@
 <?php
 
 
-namespace API\src;
+namespace API\v1\src;
 
-use API\src\Helpers\Helper;
-use API\src\user\Login;
-use API\src\user\Register;
-use API\src\user\User;
+use API\v1\src\Helpers\Helper;
+use API\v1\src\user\Login;
+use API\v1\src\user\Register;
+use API\v1\src\user\User;
 
 $filename = __DIR__ . preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
 if (php_sapi_name() === 'cli-server' && is_file($filename)) {
@@ -29,7 +29,7 @@ class Router
 
         $router = $this->router;
 
-        $router->setNamespace('API\src');
+        $router->setNamespace('API\v1\src');
         $router->set404(function () {
             Helper::response('wrongMethod');
         });

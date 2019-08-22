@@ -6,7 +6,7 @@
  * ÖR: \Helpers\Helper::dd($degisken);
  * */
 
-namespace API\src\Helpers;
+namespace API\v1\src\Helpers;
 
 
 class Helper

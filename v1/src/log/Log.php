@@ -4,10 +4,10 @@
  * LOG CLASS'ı
  * veriler burada storage dosyasına yazılır ve log_ ön ekli diğer tablolara yazılabilir
  * */
-namespace API\src\log;
+namespace API\v1\src\log;
 
 
-use API\src\database\Database;
+use API\v1\src\database\Database;
 
 class Log extends Database
 {
