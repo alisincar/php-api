@@ -22,10 +22,12 @@ function autoload($className)
 
 //Sınıfımızı arayıp bulacak olan metotu belirliyoruz.
 spl_autoload_register('autoload');
+require 'vendor/autoload.php';
 
 /**
  * HTTP isteklerini yanıtlayacak class'ımız
  * */
 if ((isset($_GET['islem']) && !empty($_GET['islem'])) || (isset($_POST['islem']) && !empty($_POST['islem']))) {
-    new \modules\src\HttpIslem();
+    new \API\src\HttpIslem();
 }
+new \API\src\Router();
